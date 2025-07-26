@@ -34,22 +34,25 @@ public class PlatformService:IPlatformService
 
         lock (_lock)
         {
-            var result = new HashSet<string>();
+            var locations = location
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(l => l.TrimEnd('/').ToLowerInvariant())
+                .ToList();
 
-            
-            var normalizedLocation = location.TrimEnd('/');
+            var result = new List<string>();
 
             foreach (var platform in _platforms)
             {
-                if (platform.ServesLocation(normalizedLocation))
+                if (locations.All(loc => platform.ServesLocation(loc)))
                 {
                     result.Add(platform.Name);
                 }
             }
 
-            return result.ToList();
+            return result;
         }
     }
+
     public int GetPlatformCount()
     {
         lock (_lock)
