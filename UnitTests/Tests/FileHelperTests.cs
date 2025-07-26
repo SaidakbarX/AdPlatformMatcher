@@ -15,16 +15,13 @@ public class FileHelperTests
     [Fact]
     public void ParsePlatformsFromText_WithValidContent_ShouldReturnCorrectPlatforms()
     {
-        // Arrange
         var content = @"Яндекс.Директ:/ru
 Ревдинский рабочий:/ru/svrd/revda,/ru/svrd/pervik
 Газета уральских москвичей:/ru/msk,/ru/permobl,/ru/chelobl
 Крутая реклама:/ru/svrd";
 
-        // Act
         var result = _fileHelper.ParsePlatformsFromText(content);
 
-        // Assert
         Assert.Equal(4, result.Count);
 
         var yandex = result.First(p => p.Name == "Яндекс.Директ");
@@ -46,37 +43,30 @@ public class FileHelperTests
     [Fact]
     public void ParsePlatformsFromText_WithEmptyContent_ShouldReturnEmptyList()
     {
-        // Act
         var result = _fileHelper.ParsePlatformsFromText("");
 
-        // Assert
         Assert.Empty(result);
     }
 
     [Fact]
     public void ParsePlatformsFromText_WithNullContent_ShouldReturnEmptyList()
     {
-        // Act
         var result = _fileHelper.ParsePlatformsFromText(null);
 
-        // Assert
         Assert.Empty(result);
     }
 
     [Fact]
     public void ParsePlatformsFromText_WithWhitespaceContent_ShouldReturnEmptyList()
     {
-        // Act
         var result = _fileHelper.ParsePlatformsFromText("   \n\r\t   ");
 
-        // Assert
         Assert.Empty(result);
     }
 
     [Fact]
     public void ParsePlatformsFromText_WithInvalidLines_ShouldSkipInvalidLines()
     {
-        // Arrange
         var content = @"Valid Platform:/ru/test
     Invalid Line Without Colon
    :/ru/test2
@@ -85,10 +75,8 @@ public class FileHelperTests
   Platform With Empty Location:,,,
    Valid Platform 2:/ru/test3";
 
-        // Act
         var result = _fileHelper.ParsePlatformsFromText(content);
 
-        // Assert
         Assert.Equal(2, result.Count);
         Assert.Contains(result, p => p.Name == "Valid Platform");
         Assert.Contains(result, p => p.Name == "Valid Platform 2");
@@ -97,13 +85,10 @@ public class FileHelperTests
     [Fact]
     public void ParsePlatformsFromText_WithInvalidLocations_ShouldSkipInvalidLocations()
     {
-        // Arrange
         var content = "Test Platform:/ru/valid,invalid-location,/ru/valid2,not-starting-with-slash,/";
 
-        // Act
         var result = _fileHelper.ParsePlatformsFromText(content);
 
-        // Assert
         Assert.Single(result);
         var platform = result.First();
         Assert.Equal(2, platform.Locations.Count);
@@ -114,14 +99,11 @@ public class FileHelperTests
     [Fact]
     public void ParsePlatformsFromText_WithExtraWhitespace_ShouldTrimCorrectly()
     {
-        // Arrange
         var content = @"  Platform With Spaces  :  /ru/test1  ,  /ru/test2  
    Another Platform   :   /ru/test3   ";
 
-        // Act
         var result = _fileHelper.ParsePlatformsFromText(content);
 
-        // Assert
         Assert.Equal(2, result.Count);
 
         var platform1 = result.First(p => p.Name == "Platform With Spaces");
@@ -137,13 +119,10 @@ public class FileHelperTests
     [Fact]
     public void ParsePlatformsFromText_WithDifferentLineEndings_ShouldParseCorrectly()
     {
-        // Arrange
         var content = "Platform1:/ru/test1\nPlatform2:/ru/test2\r\nPlatform3:/ru/test3\rPlatform4:/ru/test4";
 
-        // Act
         var result = _fileHelper.ParsePlatformsFromText(content);
 
-        // Assert
         Assert.Equal(4, result.Count);
         Assert.Contains(result, p => p.Name == "Platform1");
         Assert.Contains(result, p => p.Name == "Platform2");
