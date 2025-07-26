@@ -53,13 +53,7 @@ public class PlatformService:IPlatformService
         }
     }
 
-    public int GetPlatformCount()
-    {
-        lock (_lock)
-        {
-            return _platforms.Count;
-        }
-    }
+    
     private void RebuildLocationIndex()
     {
         _locationIndex.Clear();
